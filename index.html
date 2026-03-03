@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Моя Библиотека - Социальная платформа для чтения книг</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-book"></i> Моя Библиотека
+            </div>
+            <div class="nav-menu">
+                <a href="#" onclick="showHome()" class="nav-link">Главная</a>
+                <a href="#" onclick="showUploadForm()" class="nav-link">Загрузить книгу</a>
+                <a href="#" onclick="showAbout()" class="nav-link">О платформе</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Главная страница -->
+    <div id="home" class="page active">
+        <div class="hero">
+            <div class="hero-content">
+                <h1>Добро пожаловать в нашу библиотеку</h1>
+                <p>Делитесь своими книгами, читайте книги других авторов</p>
+                <button class="btn btn-primary" onclick="showUploadForm()">
+                    <i class="fas fa-upload"></i> Загрузить первую книгу
+                </button>
+            </div>
+        </div>
+
+        <div class="search-section">
+            <div class="container">
+                <input type="text" id="searchInput" class="search-box" placeholder="Поиск книги по названию или автору...">
+                <div class="filters">
+                    <select id="sortSelect" class="filter-select">
+                        <option value="newest">Новейшие</option>
+                        <option value="oldest">Старейшие</option>
+                        <option value="popularity">Популярные</option>
+                        <option value="a-z">А-Я</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <h2>Доступные книги</h2>
+            <div id="booksGrid" class="books-grid">
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>Книг пока нет. Загрузите первую книгу!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Страница загрузки -->
+    <div id="upload" class="page">
+        <div class="container form-container">
+            <div class="form-card">
+                <h2>Загрузить новую книгу</h2>
+                <form id="uploadForm">
+                    <div class="form-group">
+                        <label for="bookTitle">Название книги *</label>
+                        <input type="text" id="bookTitle" required placeholder="Введите название">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bookAuthor">Автор *</label>
+                        <input type="text" id="bookAuthor" required placeholder="Ваше имя">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bookDescription">Описание книги</label>
+                        <textarea id="bookDescription" placeholder="Краткое описание содержания" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bookCover">Обложка книги (изображение)</label>
+                        <input type="file" id="bookCover" accept="image/*">
+                        <div id="coverPreview" class="cover-preview"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bookContent">Текст книги (JSON или TXT) *</label>
+                        <input type="file" id="bookContent" required accept=".txt,.json">
+                        <p class="help-text">Загрузите текстовый файл с содержимым книги</p>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-check"></i> Загрузить книгу
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Страница чтения -->
+    <div id="reader" class="page">
+        <div class="reader-header">
+            <button class="btn-back" onclick="showHome()"><i class="fas fa-arrow-left"></i> Назад</button>
+            <div class="reader-info">
+                <h2 id="readerTitle"></h2>
+                <p id="readerAuthor"></p>
+            </div>
+        </div>
+
+        <div class="reader-container">
+            <div class="reader-content" id="readerContent"></div>
+            <div class="reader-controls">
+                <button id="prevBtn" class="btn-control" onclick="previousChapter()">
+                    <i class="fas fa-chevron-left"></i> Предыдущая
+                </button>
+                <div class="progress">
+                    <span id="currentPage">1</span> / <span id="totalPages">1</span>
+                </div>
+                <button id="nextBtn" class="btn-control" onclick="nextChapter()">
+                    Следующая <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="reader-sidebar">
+            <div class="sidebar-section">
+                <h3>О книге</h3>
+                <p id="sidebarDescription"></p>
+            </div>
+            <div class="sidebar-section">
+                <h3>Информация</h3>
+                <p><strong>Автор:</strong> <span id="sidebarAuthor"></span></p>
+                <p><strong>Дата:</strong> <span id="sidebarDate"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Страница о платформе -->
+    <div id="about" class="page">
+        <div class="container">
+            <div class="about-content">
+                <h2>О платформе</h2>
+                <div class="about-card">
+                    <h3><i class="fas fa-lightbulb"></i> Наша миссия</h3>
+                    <p>Создать открытую платформу для обмена знаниями и литературой, где каждый может стать автором и читателем.</p>
+                </div>
+
+                <div class="about-card">
+                    <h3><i class="fas fa-gear"></i> Как использовать</h3>
+                    <ol>
+                        <li>Нажмите "Загрузить книгу"</li>
+                        <li>Заполните информацию о книге</li>
+                        <li>Загрузите текст книги в формате TXT или JSON</li>
+                        <li>Книга появится в списке для всех читателей</li>
+                        <li>Делитесь ссылкой на платформу с друзьями</li>
+                    </ol>
+                </div>
+
+                <div class="about-card">
+                    <h3><i class="fas fa-github"></i> GitHub Integration</h3>
+                    <p>Эта платформа может быть размещена на GitHub Pages. Данные хранятся локально в браузере пользователя с использованием LocalStorage и IndexedDB.</p>
+                    <p>Для развертывания на GitHub Pages:</p>
+                    <ol>
+                        <li>Создайте репозиторий "username.github.io"</li>
+                        <li>Загрузьте эти файлы в репозиторий</li>
+                        <li>Откройте https://username.github.io</li>
+                    </ol>
+                </div>
+
+                <div class="about-card">
+                    <h3><i class="fas fa-lock"></i> Конфиденциальность</h3>
+                    <p>Все данные хранятся в вашем браузере. Никакая информация не передается на серверы. Вы имеете полный контроль над своими книгами.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2026 Моя Библиотека. Сделано с <i class="fas fa-heart"></i> для любителей чтения.</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
